@@ -1,4 +1,5 @@
 const Author = require('../models/author');
+const Book = require('../models/book');
 
 exports.index = async (request, response, next) => {
     try {
@@ -14,8 +15,15 @@ exports.index = async (request, response, next) => {
 exports.show = async (request, response, next) => {
     try {
         const { id } = request.params;
-        const author = Author.findById(id);
-        const books = author.getBooks();
+        const author = await Author.findById(id);
+        const books = await author.getBooks();
+
+        response.status(200)
+            .json({
+                author, 
+                books, 
+                status: "success"
+            })
     } catch (error) {
         next(error);
     }
@@ -60,15 +68,15 @@ exports.update = async (request, response, next) => {
 
 exports.destroy = async (request, response, next) => {
     try {
-        const {id} = request.body;
+        const { id } = request.body;
 
-        await Author.findOneAndDelete({_id:id});
+        await Author.findOneAndDelete({ _id: id });
 
         response.status(200)
-        .json({
-            message: "Author Deleted Successfully",
-            status: "success"
-        });
+            .json({
+                message: "Author Deleted Successfully",
+                status: "success"
+            });
 
     } catch (error) {
         next(error);
