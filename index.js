@@ -4,6 +4,13 @@ const app = express();
 const cors = require('cors');
 app.use(cors());
 
+//set up bodyParser
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended:true
+}));
+
 //set up mongoose
 const mongoose = require('mongoose');
 mongoose.connect(
