@@ -28,6 +28,11 @@ mongoose.connect(
 )
 .catch(error => console.error(error));
 
+//set up router
+const routes = require('./routes');
+const router = routes(express.Router());
+app.use(router);
+
 //error handling must be last middleware
 const { handle404s, errorHandler } = require('./errorHandling');
 app.use(handle404s);

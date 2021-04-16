@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const authorSchema = new mongoose.Schema({
-    Name: {
+    name: {
         type: String,
         required: true,
         unique: true,
@@ -26,4 +26,8 @@ const authorSchema = new mongoose.Schema({
         timestamps: true
     });
 
-    module.exports = mongoose.model("author", authorSchema);
+authorSchema.methods.getBooks = async function () {
+    return await mongoose.model('Book').find({ author: this._id });
+}
+
+module.exports = mongoose.model("Author", authorSchema);
