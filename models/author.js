@@ -30,4 +30,8 @@ authorSchema.methods.getBooks = async function () {
     return await mongoose.model('Book').find({ author: this._id });
 }
 
+authorSchema.methods.hasBooks = async function () {
+    return await mongoose.model('Book').exists({authorId: this._id});
+}
+
 module.exports = mongoose.model("Author", authorSchema);

@@ -20,8 +20,8 @@ exports.show = async (request, response, next) => {
 
         response.status(200)
             .json({
-                author, 
-                books, 
+                author,
+                books,
                 status: "success"
             })
     } catch (error) {
@@ -68,16 +68,25 @@ exports.update = async (request, response, next) => {
 
 exports.destroy = async (request, response, next) => {
     try {
+        let message, statusMessage = "";
+        let status = 200;
         const { id } = request.body;
+        const author = await Author.findById(id);
+        const books = await author.getBooks();
+        if(books.length > 0){
+            //fail
+            message = `Please delete all of ${author.name}'s books first`;
+            status = 409;
+            statusMessage = "failure: request conflicts with server state";
+        } else {
+            //succeed
+            await Author.findOneAndDelete({_id: id});
+            message = `${author.name} successfully deleted`;
+            statusMessage = "success";
+        };
 
-        await Author.findOneAndDelete({ _id: id });
-
-        response.status(200)
-            .json({
-                message: "Author Deleted Successfully",
-                status: "success"
-            });
-
+        
+        response.status(status).json({ message, status: statusMessage});
     } catch (error) {
         next(error);
     }
